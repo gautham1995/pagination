@@ -32,22 +32,54 @@ if($page > 1){
 $sql = "SELECT * FROM user_details WHERE first_name='bell' ORDER BY id LIMIT $start, $rpp ";
 $resultSet = $conn->query($sql);
 
+
+
+//
+
+$last;
+$sql1 = "SELECT * FROM user_details WHERE first_name='bell' ORDER BY id LIMIT $start, $rpp";
+$result1 = mysqli_query($conn, $sql1);
+
+if (mysqli_num_rows($result1) > 0) {
+    // output data of each row
+    while($row1 = mysqli_fetch_assoc($result1)) {
+// echo $row1['id'];
+        $last = $row1['id'];
+    }  
+} else {
+    echo "0 results";
+}
+
+//
+
 $sl = 0;
 // json starts
 echo '{';
 
 while($rows = $resultSet->fetch_assoc()) {
   echo  '"'.$sl.'":{';
-  echo '"id":'.$rows['id'].',';
+  echo '"id":'.$rows['id'].','; 
+
   echo '"un":"'.$rows['username'].'",';
   echo '"fn":"'.$rows['first_name'].'",';
   echo '"ln":"'.$rows['last_name'].'",';
   echo '"ge":"'.$rows['gender'].'",';
   echo '"pw":"'.$rows['password'].'"';
-  echo '},';
+
+if($rows['id']== $last){
+  echo '}';
+}else{
+   echo '},';
+}
+
+  
+
+
+
   $sl++;
 }
-echo '"lastID":'.$page.'';
+//echo '"lastID":'.$page.'';
+
 echo '}';
 // json ends
 $conn->close();
